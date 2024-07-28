@@ -1,0 +1,31 @@
+name: Issue Bot
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Parse issue and comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issueBody = context.payload.issue.body;
+            const titleMatch = issueBody.match(/^title:\s*(.+)$/m);
+            if (titleMatch) {
+              const content = titleMatch[1].trim();
+              const issueNumber = context.payload.issue.number;
+              const issueComment = `The content from your title is: ${content}`;
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: issueComment,
+              });
+            }
