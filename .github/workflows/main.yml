@@ -16,7 +16,7 @@ jobs:
         with:
           script: |
             const issueBody = context.payload.issue.body;
-            const titleMatch = issueBody.match(/^title:\s*(.+)$/m);
+            const titleMatch = issueBody.match(/^title=\s*(.+)$/m);
             if (titleMatch) {
               const content = titleMatch[1].trim();
               const issueNumber = context.payload.issue.number;
